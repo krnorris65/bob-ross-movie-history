@@ -14,17 +14,13 @@
                 <img class="fakeLink"
                      src="https://image.tmdb.org/t/p/w154/@Html.DisplayFor(modelItem => trackedMovie.ImageURL)" />
 
-                @if (trackedMovie.Favorited == false)
+                @if (trackedMovie.Watched == false)
                  {
-
-                    <a asp-action="Favorite" asp-route-movieUserId="@trackedMovie.MovieUserId">Mark as Favorite</a>
-
+                    <p><a asp-action="Watched" asp-route-movieUserId="@trackedMovie.MovieUserId">Mark as Watched</a></p>
                  }
                  else
                  {
-
-                    <p>Favorite Movie</p>
-
+                    <p>Watched</p>
                  }
             </div>
         </div>

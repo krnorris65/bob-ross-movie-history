@@ -41,6 +41,16 @@ namespace MovieHistory.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> ListWatched()
+        {
+            ApplicationUser user = await GetCurrentUserAsync();
+
+            var model = new TrackedMoviesViewModel();
+            model.TrackedUserMovies = GetUserWatchedMovies(user);
+
+            return View(model);
+        }
+
         public async Task<IActionResult> Track(string apiId, string title, string img)
         {
             //gets the current user
@@ -93,6 +103,23 @@ namespace MovieHistory.Controllers
              }).ToList();
         }
 
+        public ICollection<TrackedMovie> GetUserWatchedMovies(ApplicationUser user)
+        {
+            return (from m in _context.Movie
+                    join mu in _context.MovieUser
+                      on m.MovieId equals mu.MovieId
+                    where mu.User == user && mu.Watched == true
+                    select new TrackedMovie
+                    {
+                        MovieUserId = mu.MovieUserId,
+                        Title = m.Title,
+                        ImageURL = m.ImgUrl,
+                        Genre = mu.Genre,
+                        Favorited = mu.Favorited,
+                        Watched = mu.Watched
+                    }).ToList();
+        }
+
         public bool IsMovieTracked (int movieId, ApplicationUser user)
         {
             var isTracked = _context.MovieUser
@@ -122,6 +149,19 @@ namespace MovieHistory.Controllers
             return RedirectToActionPermanent("ListTracked");
         }
 
+        public async Task<IActionResult> Watched(int movieUserId)
+        {
+            MovieUser watchedMovie = _context.MovieUser
+                .Where(mu => mu.MovieUserId == movieUserId)
+                .SingleOrDefault();
+
+            watchedMovie.Watched = true;
+
+            _context.Update(watchedMovie);
+            await _context.SaveChangesAsync();
+
+            return RedirectToActionPermanent("ListWatched");
+        }
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
