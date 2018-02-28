@@ -2,6 +2,7 @@
 
 <h1>Yay! You tracked a movie!</h1>
 
+<a asp-action="ListWatched">Only see watched movies</a>
 <div id="movieGrid" class="container-fluid">
 
     @foreach (var trackedMovie in Model.TrackedUserMovies)
@@ -15,13 +16,21 @@
                      src="https://image.tmdb.org/t/p/w154/@Html.DisplayFor(modelItem => trackedMovie.ImageURL)" />
 
                 @if (trackedMovie.Watched == false)
-                 {
-                    <p><a asp-action="Watched" asp-route-movieUserId="@trackedMovie.MovieUserId">Mark as Watched</a></p>
-                 }
-                 else
-                 {
-                    <p>Watched</p>
-                 }
+    {
+            <p><a asp-action="Watched" asp-route-movieUserId="@trackedMovie.MovieUserId">Mark as Watched</a></p>
+}
+else
+{
+            <p>Watched</p>
+            @if (trackedMovie.Favorited == false)
+{
+            <p><a asp-action="Favorite" asp-route-movieUserId="@trackedMovie.MovieUserId">Mark as Favorite</a></p>
+}
+else
+{
+            <p>Favorite Movie</p>
+}
+}
             </div>
         </div>
     }

@@ -1,6 +1,7 @@
 ﻿@model MovieHistory.Models.MovieViewModels.TrackedMoviesViewModel
 
 <h1>Watched Movies</h1>
+<a asp-action="ListTracked">Back to List</a>
 <div id="movieGrid" class="container-fluid">
 
     @foreach (var trackedMovie in Model.TrackedUserMovies)
