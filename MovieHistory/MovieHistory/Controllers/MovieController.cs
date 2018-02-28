@@ -108,6 +108,20 @@ namespace MovieHistory.Controllers
             return true;
         }
 
+        public async Task<IActionResult> Favorite(int movieUserId)
+        {
+            MovieUser favMovie = _context.MovieUser
+                .Where(mu => mu.MovieUserId == movieUserId)
+                .SingleOrDefault();
+
+            favMovie.Favorited = true;
+
+            _context.Update(favMovie);
+            await _context.SaveChangesAsync();
+
+            return RedirectToActionPermanent("ListTracked");
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
